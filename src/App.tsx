@@ -1,7 +1,8 @@
 import React from 'react'
+import AppLayout from './AppLayout'
 
 function App (): React.ReactElement {
-  return <></>
+  return <AppLayout />
 }
 
 export default App

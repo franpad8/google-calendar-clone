@@ -6,7 +6,12 @@ export default {
       display: ["'Open Sans'", 'Roboto', 'Arial', 'sans-serif'],
       body: ['Roboto', 'Helvetica', 'Arial', 'sans-serif']
     },
-    extend: {}
+    extend: {
+      colors: {
+        hairline: '#dadce0',
+        surface: '#3c4043'
+      }
+    }
   },
   plugins: []
 }
