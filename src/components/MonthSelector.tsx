@@ -1,24 +1,26 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi'
-import { addMonths, format, subMonths } from 'date-fns'
+import { format } from 'date-fns'
+import { useSelectedMonth } from '../contexts/selectedMonthContext'
 
 function MonthSelector (): React.ReactElement {
-  const [selectedMonth, setSelectedMonth] = useState<Date>(() => new Date())
+
+  const {selectedMonth, decrementMonth, incrementMonth, goToCurrentMonth} = useSelectedMonth()
 
   const todayDate = format(selectedMonth, 'MMMM yyy')
 
   function onPreviousMonthClick (e: Event) {
     e.preventDefault()
-    setSelectedMonth(month => subMonths(month, 1))
+    decrementMonth()
   }
 
   function onNextMonthClick (e: Event) {
     e.preventDefault()
-    setSelectedMonth(month => addMonths(month, 1))
+    incrementMonth()
   }
 
   function onTodayClick () {
-    setSelectedMonth(new Date())
+    goToCurrentMonth()
   }
 
   return (
