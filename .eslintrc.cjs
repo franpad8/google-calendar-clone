@@ -7,7 +7,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'standard',
     'standard-jsx',
-    'prettier'
+    'plugin:tailwindcss/recommended'
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',

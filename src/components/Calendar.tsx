@@ -12,8 +12,6 @@ import { useSelectedMonth } from '../contexts/selectedMonthContext'
 
 function Calendar () {
   const { selectedMonth } = useSelectedMonth()
-
-
   const startMonth = startOfMonth(selectedMonth)
   const endMonth = endOfMonth(selectedMonth)
 
@@ -26,9 +24,9 @@ function Calendar () {
   const daysBeforeStartOfMonth =
     startMonthDay > 0
       ? eachDayOfInterval({
-          start: subDays(startMonth, startMonthDay),
-          end: subDays(startMonth, 1)
-        })
+        start: subDays(startMonth, startMonthDay),
+        end: subDays(startMonth, 1)
+      })
       : []
 
   const numDaysAfterEndOfMonth = 7 - Number(format(endMonth, 'i'))
@@ -36,21 +34,21 @@ function Calendar () {
   const daysAfterEndOfMonth =
     numDaysAfterEndOfMonth > 0
       ? eachDayOfInterval({
-          start: addDays(endMonth, 1),
-          end: addDays(endMonth, numDaysAfterEndOfMonth)
-        })
+        start: addDays(endMonth, 1),
+        end: addDays(endMonth, numDaysAfterEndOfMonth)
+      })
       : []
 
   return (
     <div
       className='grid
-                 grid-cols-[repeat(7,1fr)]
-                 grid-rows-5
-                 bg-hairline
                  h-full
-                 w-full
-                 border border-hairline
-                 border-t-0'
+                 w-full grid-cols-[repeat(7,1fr)]
+                 grid-rows-5
+                 border
+                 border-t-0
+                 border-hairline
+                 bg-hairline'
     >
       {daysBeforeStartOfMonth.map(day => {
         const dayOfMonthNumber = format(day, 'd')
