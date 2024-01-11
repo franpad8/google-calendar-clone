@@ -6,7 +6,7 @@ function AppLayout (): ReactElement {
   return (
     <div className='grid
                     h-screen
-                    grid-cols-[20rem_1fr]
+                    grid-cols-[16rem_1fr]
                     grid-rows-[4rem_1fr]'
     >
       <Header />

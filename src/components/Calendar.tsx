@@ -9,9 +9,10 @@ import {
 } from 'date-fns'
 import Square from './Square'
 import { useSelectedMonth } from '../contexts/selectedMonthContext'
+import { WheelEvent } from 'react'
 
 function Calendar () {
-  const { selectedMonth } = useSelectedMonth()
+  const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonth()
   const startMonth = startOfMonth(selectedMonth)
   const endMonth = endOfMonth(selectedMonth)
 
@@ -39,6 +40,24 @@ function Calendar () {
       })
       : []
 
+  let lastTime: number = (new Date()).getTime()
+  function handleMouseWheel (e: WheelEvent) {
+    const currentTime = (new Date()).getTime()
+    const deltaTime = currentTime - lastTime
+
+    // We apply a debouncing to avoid the excesive execution
+    // of change months function when using the mouse wheel
+    if ((deltaTime < 200)) return
+
+    if (e.deltaY > 0) {
+      incrementMonth()
+    } else {
+      decrementMonth()
+    }
+
+    lastTime = currentTime
+  }
+
   return (
     <div
       className='grid
@@ -49,6 +68,7 @@ function Calendar () {
                  border-t-0
                  border-hairline
                  bg-hairline'
+      onWheel={handleMouseWheel}
     >
       {daysBeforeStartOfMonth.map(day => {
         const dayOfMonthNumber = format(day, 'd')
