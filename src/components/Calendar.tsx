@@ -10,6 +10,9 @@ import {
 import Square from './Square'
 import { useSelectedMonth } from '../contexts/selectedMonthContext'
 import { WheelEvent } from 'react'
+import Modal from './Modal'
+import { HiX } from 'react-icons/hi'
+import CreateEventForm from './CreateEventForm'
 
 function Calendar () {
   const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonth()
@@ -59,8 +62,9 @@ function Calendar () {
   }
 
   return (
-    <div
-      className='grid
+    <>
+      <div
+        className='grid
                  h-full
                  w-full grid-cols-[repeat(7,1fr)]
                  grid-rows-5
@@ -68,51 +72,64 @@ function Calendar () {
                  border-t-0
                  border-hairline
                  bg-hairline'
-      onWheel={handleMouseWheel}
-    >
-      {daysBeforeStartOfMonth.map(day => {
-        const dayOfMonthNumber = format(day, 'd')
+        onWheel={handleMouseWheel}
+      >
+        {daysBeforeStartOfMonth.map(day => {
+          const dayOfMonthNumber = format(day, 'd')
 
-        return (
-          <Square
-            key={day.getTime()}
-            dayName={format(day, 'eee')}
-            dayNumber={dayOfMonthNumber}
-            isToday={isToday(day)}
-          />
-        )
-      })}
-      {daysInMonth.map(day => {
-        const dayOfMonthNumber = format(day, 'd')
-        const dayOfWeekNumber = format(day, 'i')
-        return (
-          <Square
-            key={day.getTime()}
-            dayName={
+          return (
+            <Square
+              key={day.getTime()}
+              dayName={format(day, 'eee')}
+              dayNumber={dayOfMonthNumber}
+              isToday={isToday(day)}
+            />
+          )
+        })}
+        {daysInMonth.map(day => {
+          const dayOfMonthNumber = format(day, 'd')
+          const dayOfWeekNumber = format(day, 'i')
+          return (
+            <Square
+              key={day.getTime()}
+              dayName={
               Number(dayOfMonthNumber) <= Number(dayOfWeekNumber)
                 ? format(day, 'eee')
                 : undefined
             }
-            dayNumber={
+              dayNumber={
               dayOfMonthNumber === '1' ? format(day, 'MMM d') : dayOfMonthNumber
             }
-            isToday={isToday(day)}
-          />
-        )
-      })}
-      {daysAfterEndOfMonth.map(day => {
-        const dayOfMonthNumber = format(day, 'd')
-        return (
-          <Square
-            key={day.getTime()}
-            dayNumber={
+              isToday={isToday(day)}
+            />
+          )
+        })}
+        {daysAfterEndOfMonth.map(day => {
+          const dayOfMonthNumber = format(day, 'd')
+          return (
+            <Square
+              key={day.getTime()}
+              dayNumber={
               dayOfMonthNumber === '1' ? format(day, 'MMM d') : dayOfMonthNumber
             }
-            isToday={isToday(day)}
-          />
-        )
-      })}
-    </div>
+              isToday={isToday(day)}
+            />
+          )
+        })}
+      </div>
+
+      <Modal.Window windowId='eventCreation'>
+        <>
+          <div className='flex h-10 w-[30rem] items-center justify-end bg-slate-100 px-5'>
+            <Modal.Close><HiX /></Modal.Close>
+          </div>
+
+          <div className='p-5'>
+            <CreateEventForm />
+          </div>
+        </>
+      </Modal.Window>
+    </>
   )
 }
 

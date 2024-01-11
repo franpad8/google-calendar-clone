@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import Header from './components/Header'
 import Calendar from './components/Calendar'
+import Modal from './components/Modal'
 
 function AppLayout (): ReactElement {
   return (
@@ -12,7 +13,9 @@ function AppLayout (): ReactElement {
       <Header />
       <div className='h-full'>SIDEBAR</div>
       <main>
-        <Calendar />
+        <Modal>
+          <Calendar />
+        </Modal>
       </main>
     </div>
   )

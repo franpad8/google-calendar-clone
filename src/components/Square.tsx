@@ -1,4 +1,5 @@
 import React from 'react'
+import Modal from './Modal'
 
 interface SquareProps {
   dayName?: string
@@ -14,27 +15,31 @@ function Square ({
   const style = isToday ? 'bg-blue-600 text-white' : ''
 
   return (
-    <div
-      className='flex flex-col
-                 items-center
-                 gap-1
-                 border-b
-                 border-r
-                 border-solid
-                 border-b-hairline
-                 border-r-hairline
-                 bg-white
-                 py-2'
-    >
-      {dayName && (
-        <span className='text-[11px] font-semibold uppercase text-slate-500'>
-          {dayName}
-        </span>
-      )}
-      <span className={`h-6 min-w-6 rounded-full text-center text-xs font-medium leading-6 ${style}`}>
-        {dayNumber}
-      </span>
-    </div>
+    <>
+      <Modal.Open opens='eventCreation'>
+        <div
+          className='flex flex-col
+                  items-center
+                  gap-1
+                  border-b
+                  border-r
+                  border-solid
+                  border-b-hairline
+                  border-r-hairline
+                  bg-white
+                  py-2'
+        >
+          {dayName && (
+            <span className='text-[11px] font-semibold uppercase text-slate-500'>
+              {dayName}
+            </span>
+          )}
+          <span className={`h-6 min-w-6 rounded-full text-center text-xs font-medium leading-6 ${style}`}>
+            {dayNumber}
+          </span>
+        </div>
+      </Modal.Open>
+    </>
   )
 }
 
