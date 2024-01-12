@@ -13,6 +13,7 @@ import { WheelEvent } from 'react'
 import Modal from './Modal'
 import { HiX } from 'react-icons/hi'
 import CreateEventForm from './CreateEventForm'
+import IconButton from './IconButton'
 
 function Calendar () {
   const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonth()
@@ -121,7 +122,7 @@ function Calendar () {
       <Modal.Window windowId='eventCreation'>
         <>
           <div className='flex h-10 w-[30rem] items-center justify-end bg-slate-100 px-5'>
-            <Modal.Close><HiX /></Modal.Close>
+            <Modal.Close><IconButton IconElement={HiX} /></Modal.Close>
           </div>
 
           <div className='p-5'>

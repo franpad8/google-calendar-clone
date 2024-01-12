@@ -1,19 +1,21 @@
-import React from 'react'
+import React, { MouseEvent } from 'react'
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi'
 import { format } from 'date-fns'
 import { useSelectedMonth } from '../contexts/selectedMonthContext'
+import Button from './Button'
+import IconButton from './IconButton'
 
 function MonthSelector (): React.ReactElement {
   const { selectedMonth, decrementMonth, incrementMonth, goToCurrentMonth } = useSelectedMonth()
 
   const todayDate = format(selectedMonth, 'MMMM yyy')
 
-  function onPreviousMonthClick (e: Event) {
+  function onPreviousMonthClick (e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
     decrementMonth()
   }
 
-  function onNextMonthClick (e: Event) {
+  function onNextMonthClick (e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
     incrementMonth()
   }
@@ -24,37 +26,16 @@ function MonthSelector (): React.ReactElement {
 
   return (
     <div className='flex items-center gap-4'>
-      <button
-        className='select-none
-                   border
-                   border-hairline
-                   px-4
-                   py-2
-                   text-sm
-                   font-medium
-                   hover:bg-slate-100'
+      <Button
+        className='border border-hairline'
+        variation='secondary'
         onClick={onTodayClick}
       >
         Today
-      </button>
+      </Button>
       <div className='flex gap-2'>
-        <HiOutlineChevronLeft
-          className='h-[25px]
-                     w-[25px]
-                     cursor-pointer rounded-full
-                     p-[4px]
-                     hover:bg-slate-100'
-          onClick={onPreviousMonthClick}
-        />
-        <HiOutlineChevronRight
-          className='h-[25px]
-                     w-[25px]
-                     cursor-pointer
-                     rounded-full
-                     p-[4px]
-                     hover:bg-slate-100'
-          onClick={onNextMonthClick}
-        />
+        <IconButton IconElement={HiOutlineChevronLeft} onClick={onPreviousMonthClick} />
+        <IconButton IconElement={HiOutlineChevronRight} onClick={onNextMonthClick} />
       </div>
       <span className='select-none font-display text-[22px]'>{todayDate}</span>
     </div>
