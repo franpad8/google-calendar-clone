@@ -9,7 +9,10 @@ function CreateEventForm () {
                    text-2xl
                    outline-none
                    transition-all
-                   focus:border-b-blue-600' type='text' name='title' placeholder='Add a title'
+                   focus:border-b-blue-600'
+        type='text'
+        name='title'
+        placeholder='Add a title'
       />
       <Button className='self-end'>Save</Button>
     </form>

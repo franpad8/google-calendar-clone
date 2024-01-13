@@ -1,3 +1,5 @@
+import { WheelEvent } from 'react'
+import { HiX } from 'react-icons/hi'
 import {
   eachDayOfInterval,
   endOfMonth,
@@ -7,16 +9,22 @@ import {
   isToday,
   addDays
 } from 'date-fns'
+
 import Square from './Square'
-import { useSelectedMonth } from '../contexts/selectedMonthContext'
-import { WheelEvent } from 'react'
 import Modal from './Modal'
-import { HiX } from 'react-icons/hi'
 import CreateEventForm from './CreateEventForm'
 import IconButton from './IconButton'
+import useSelectedMonthStore from '../stores/selectedMonthStore'
+import { useShallow } from 'zustand/react/shallow'
 
 function Calendar () {
-  const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonth()
+  const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonthStore(
+    useShallow(state => ({
+      selectedMonth: state.selectedMonth,
+      decrementMonth: state.decrementMonth,
+      incrementMonth: state.incrementMonth
+    }))
+  )
   const startMonth = startOfMonth(selectedMonth)
   const endMonth = endOfMonth(selectedMonth)
 
@@ -68,7 +76,6 @@ function Calendar () {
         className='grid
                  h-full
                  w-full grid-cols-[repeat(7,1fr)]
-                 grid-rows-5
                  border
                  border-t-0
                  border-hairline

@@ -6,7 +6,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 function IconButton ({ IconElement, ...props }: Props) {
-  const classes = 'cursor-pointer rounded-full hover:bg-slate-200 p-1'
+  const classes = 'cursor-pointer rounded-full hover:bg-slate-50 p-[.4rem] focus:bg-slate-200 active:bg-slate-300 transition'
 
   return (
     <button

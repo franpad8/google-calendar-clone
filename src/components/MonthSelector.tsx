@@ -1,12 +1,17 @@
 import React, { MouseEvent } from 'react'
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi'
 import { format } from 'date-fns'
-import { useSelectedMonth } from '../contexts/selectedMonthContext'
 import Button from './Button'
 import IconButton from './IconButton'
+import useSelectedMonthStore from '../stores/selectedMonthStore'
 
 function MonthSelector (): React.ReactElement {
-  const { selectedMonth, decrementMonth, incrementMonth, goToCurrentMonth } = useSelectedMonth()
+  const {
+    selectedMonth,
+    decrementMonth,
+    incrementMonth,
+    goToCurrentMonth
+  } = useSelectedMonthStore(state => state)
 
   const todayDate = format(selectedMonth, 'MMMM yyy')
 
