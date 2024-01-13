@@ -87,7 +87,7 @@ function Calendar () {
 
       <Modal.Window windowId='eventCreation'>
         <>
-          <div className='flex h-10 w-[30rem] items-center justify-end bg-slate-100 px-5'>
+          <div className='flex items-center justify-end bg-slate-100 px-3'>
             <Modal.Close><IconButton IconElement={HiX} /></Modal.Close>
           </div>
 

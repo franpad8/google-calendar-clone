@@ -1,36 +1,31 @@
-import React, { MouseEvent, ReactElement, RefObject, cloneElement, createContext, useContext, useEffect, useState } from 'react'
+import React, {
+  CSSProperties,
+  ReactElement,
+  RefObject,
+  cloneElement,
+  useContext,
+  useState
+} from 'react'
 import { createPortal } from 'react-dom'
 import useClickOutside from '../hooks/useClickOutside'
-
-interface ModalContextValueType {
-  openWindow: string,
-  xPos: number,
-  yPos: number,
-  close: () => void,
-  open: (windowId: string, xPos?: number, yPos?: number) => void
-}
-
-const ModalContext = createContext<ModalContextValueType | null>(null)
+import { ModalContext, ModalContextDataType } from '../contexts/modalContext'
 
 function Modal ({ children }: { children: React.ReactElement }) {
   const [openWindow, setOpenWindow] = useState<string>('')
-  const [xPos, setXPos] = useState<number>(0)
-  const [yPos, setYPos] = useState<number>(0)
+  const [windowContainerStyle, setWindowContainerStyle] = useState<CSSProperties | undefined>(undefined)
 
   function close () : void {
     setOpenWindow('')
   }
 
-  function open (windowId: string, xPos = 0, yPos = 0) : void {
-    setXPos(xPos)
-    setYPos(yPos)
+  function open (windowId: string, windowContainerStyle?: CSSProperties) : void {
+    setWindowContainerStyle(windowContainerStyle)
     setOpenWindow(windowId)
   }
 
-  const value: ModalContextValueType = {
+  const value: ModalContextDataType = {
     openWindow,
-    xPos,
-    yPos,
+    windowContainerStyle,
     close,
     open
   }
@@ -40,20 +35,18 @@ function Modal ({ children }: { children: React.ReactElement }) {
 
 interface OpenPropsType {
   children: ReactElement,
-  opens: string
+  opens: string,
+  windowContainerStyle?: CSSProperties
 }
 
-function Open ({ children, opens: windowId }: OpenPropsType) {
+function Open ({ children, opens: windowId, windowContainerStyle }: OpenPropsType) {
   const context = useContext(ModalContext)
   if (!context) throw new Error('ModalOpen used outside of ModalContext')
 
   const { open } = context
 
-  function handleClick (event: MouseEvent<HTMLElement>) {
-    const xPos = event.clientX
-    const yPos = event.clientY
-
-    open(windowId, xPos, yPos)
+  function handleClick () {
+    open(windowId, windowContainerStyle)
   }
 
   return cloneElement(children, { onClick: handleClick })
@@ -76,31 +69,23 @@ interface WindowPropsType {
 function Window ({ children, windowId, withBackground = true }: WindowPropsType) {
   const context = useContext(ModalContext)
   if (!context) throw new Error('ModalOpen used outside of ModalContext')
-  const { openWindow, close, xPos, yPos } = context
-
-  // State to manage the exact coordinates where to display the modal window
-  const [x, setX] = useState<number>(0)
-  const [y, setY] = useState<number>(0)
+  const { openWindow, close, windowContainerStyle } = context
 
   const windowElementRef = useClickOutside({ onClickOutside: () => close() })
 
-  useEffect(() => {
-    if (!windowElementRef.current) return
-
-    setX(Math.min(window.innerWidth - windowElementRef.current.clientWidth - 100, xPos))
-    setY(Math.min(window.innerHeight - windowElementRef.current.clientHeight - 100, yPos))
-  }, [windowElementRef, xPos, yPos])
-
   if (openWindow !== windowId) return null
-  const styles = { left: `${x}px`, top: `${y}px` }
+
+  // If no x and y coords are set, then display modal at the center of the screen
+  const containerStyles = windowContainerStyle ||
+    { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }
 
   return createPortal(
     <>
       {withBackground && <div className='absolute left-0 top-0 h-full w-full bg-transparent' />}
       <div
         className='absolute z-50 rounded-md border bg-white shadow-lg transition-all'
-        style={styles}
         ref={windowElementRef as RefObject<HTMLDivElement>}
+        style={containerStyles}
       >
         {children}
       </div>

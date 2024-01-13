@@ -2,7 +2,7 @@ import Button from './Button'
 
 function CreateEventForm () {
   return (
-    <form className='flex max-h-[29rem] max-w-[30rem] flex-col gap-8 overflow-auto'>
+    <form className='flex flex-col gap-8 overflow-auto'>
       <input
         className='border-b-2
                  border-b-slate-100

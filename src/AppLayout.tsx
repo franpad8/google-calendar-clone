@@ -7,10 +7,11 @@ import { twJoin } from 'tailwind-merge'
 
 function AppLayout (): ReactElement {
   const showSidebar = useToggleSidebarStore(state => state.showSidebar)
+  console.log(showSidebar)
 
   const containerClasses = twJoin(
     'grid h-screen grid-cols-[16rem_1fr] grid-rows-[4rem_1fr] transition-all',
-    showSidebar ? 'grid-cols-[16rem_1fr]' : 'grid-cols-[0_1fr]'
+    showSidebar ? 'grid-cols-[16rem_1fr]' : 'grid-cols-[1px_1fr]'
   )
 
   return (
