@@ -38,7 +38,7 @@ function MonthSelector (): React.ReactElement {
       >
         Today
       </Button>
-      <div className='flex gap-2'>
+      <div className='flex gap-[0.2rem]'>
         <IconButton IconElement={HiOutlineChevronLeft} onClick={onPreviousMonthClick} />
         <IconButton IconElement={HiOutlineChevronRight} onClick={onNextMonthClick} />
       </div>

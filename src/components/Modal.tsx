@@ -53,7 +53,6 @@ function Open ({ children, opens: windowId }: OpenPropsType) {
     const xPos = event.clientX
     const yPos = event.clientY
 
-    console.log('open')
     open(windowId, xPos, yPos)
   }
 
