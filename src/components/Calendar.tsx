@@ -1,14 +1,5 @@
-import { WheelEvent } from 'react'
 import { HiX } from 'react-icons/hi'
-import {
-  eachDayOfInterval,
-  endOfMonth,
-  format,
-  startOfMonth,
-  subDays,
-  isToday,
-  addDays
-} from 'date-fns'
+import { format, isToday } from 'date-fns'
 
 import Square from './Square'
 import Modal from './Modal'
@@ -16,6 +7,8 @@ import CreateEventForm from './CreateEventForm'
 import IconButton from './IconButton'
 import useSelectedMonthStore from '../stores/selectedMonthStore'
 import { useShallow } from 'zustand/react/shallow'
+import useMouseWheel from '../hooks/useMouseWheel'
+import { getDaysInCalendar } from '../utils/helpers'
 
 function Calendar () {
   const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonthStore(
@@ -25,50 +18,16 @@ function Calendar () {
       incrementMonth: state.incrementMonth
     }))
   )
-  const startMonth = startOfMonth(selectedMonth)
-  const endMonth = endOfMonth(selectedMonth)
-
-  const daysInMonth = eachDayOfInterval({
-    start: startMonth,
-    end: endMonth
+  const handleMouseWheel = useMouseWheel({
+    onMouseWheelUp: incrementMonth,
+    onMouseWheelDown: decrementMonth
   })
 
-  const startMonthDay = Number(format(startMonth, 'i')) - 1
-  const daysBeforeStartOfMonth =
-    startMonthDay > 0
-      ? eachDayOfInterval({
-        start: subDays(startMonth, startMonthDay),
-        end: subDays(startMonth, 1)
-      })
-      : []
-
-  const numDaysAfterEndOfMonth = 7 - Number(format(endMonth, 'i'))
-
-  const daysAfterEndOfMonth =
-    numDaysAfterEndOfMonth > 0
-      ? eachDayOfInterval({
-        start: addDays(endMonth, 1),
-        end: addDays(endMonth, numDaysAfterEndOfMonth)
-      })
-      : []
-
-  let lastTime: number = (new Date()).getTime()
-  function handleMouseWheel (e: WheelEvent) {
-    const currentTime = (new Date()).getTime()
-    const deltaTime = currentTime - lastTime
-
-    // We apply a debouncing to avoid the excesive execution
-    // of change months function when using the mouse wheel
-    if ((deltaTime < 200)) return
-
-    if (e.deltaY > 0) {
-      incrementMonth()
-    } else {
-      decrementMonth()
-    }
-
-    lastTime = currentTime
-  }
+  const [
+    daysBeforeStartOfMonth,
+    daysInMonth,
+    daysAfterEndOfMonth
+  ] = getDaysInCalendar(selectedMonth)
 
   return (
     <>
