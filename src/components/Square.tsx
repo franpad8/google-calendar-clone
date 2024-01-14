@@ -1,15 +1,17 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import useModal from '../hooks/useModal'
 import { format, isSameDay, isToday as isTodayFns } from 'date-fns'
 import useEventPreviewStore from '../stores/eventPreviewStore'
 import EventItem from './EventItem'
 import { useShallow } from 'zustand/react/shallow'
+import { type EventType } from '../types/event.ts'
 interface SquareProps {
   day: Date,
+  dayEvents: EventType[],
   showDayName: boolean,
 }
 
-function Square ({ day, showDayName }: SquareProps) {
+function Square ({ day, dayEvents, showDayName }: SquareProps) {
   const {
     setPreviewEventDay,
     previewEventDay,
@@ -75,7 +77,11 @@ function Square ({ day, showDayName }: SquareProps) {
         <span className={`h-6 min-w-6 rounded-full text-center text-xs font-medium leading-6 ${style}`}>
           {dayNumber}
         </span>
-        <ul className='flex w-full flex-col'>
+        <ul className='flex w-full flex-col gap-1'>
+          {
+            dayEvents && dayEvents.map(event => <EventItem key={day.toString + '_' + event.id} event={event} />)
+          }
+
           {
             previewEventDay && isSameDay(day, previewEventDay)
               ? <EventItem event={{ title: previewEventTitle === '' ? '(Untitled)' : previewEventTitle }} />

@@ -11,6 +11,9 @@ import useMouseWheel from '../hooks/useMouseWheel'
 import { getDaysInCalendar } from '../utils/helpers'
 import useModal from '../hooks/useModal'
 import useEventPreviewStore from '../stores/eventPreviewStore'
+import eventsData from '../mocks/events.json'
+import { useState } from 'react'
+import { EventDataType } from '../types/event'
 
 function Calendar () {
   const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonthStore(
@@ -27,6 +30,8 @@ function Calendar () {
     onMouseWheelUp: incrementMonth,
     onMouseWheelDown: decrementMonth
   })
+
+  const [events] = useState<EventDataType>(() => eventsData)
 
   const [
     daysBeforeStartOfMonth,
@@ -55,6 +60,7 @@ function Calendar () {
           <Square
             key={day.getTime()}
             day={day}
+            dayEvents={events[format(day, 'y-MM-dd')]}
             showDayName
           />
         )
@@ -66,6 +72,7 @@ function Calendar () {
             <Square
               key={day.getTime()}
               day={day}
+              dayEvents={events[format(day, 'y-MM-dd')]}
               showDayName={dayOfMonthNumber <= dayOfWeekNumber}
             />
           )
@@ -74,6 +81,7 @@ function Calendar () {
           <Square
             key={day.getTime()}
             day={day}
+            dayEvents={events[format(day, 'y-MM-dd')]}
             showDayName={false}
           />
         )
