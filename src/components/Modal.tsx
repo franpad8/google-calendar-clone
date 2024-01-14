@@ -52,26 +52,37 @@ function Open ({ children, opens: windowId, windowContainerStyle }: OpenPropsTyp
   return cloneElement(children, { onClick: handleClick })
 }
 
-function Close ({ children }: {children: ReactElement}) {
+interface ClosePropsType {
+  children: ReactElement,
+  onClose?: () => void
+}
+
+function Close ({ children, onClose = () => {} }: ClosePropsType) {
   const context = useContext(ModalContext)
   if (!context) throw new Error('ModalOpen used outside of ModalContext')
 
-  const { close } = context
+  const { close: closeModal } = context
 
-  return cloneElement(children, { onClick: close })
+  function onClick () {
+    onClose()
+    closeModal()
+  }
+
+  return cloneElement(children, { onClick })
 }
 
 interface WindowPropsType {
   children: ReactElement
   windowId: string
   withBackground?: boolean
+  onClickOutside?: () => void
 }
-function Window ({ children, windowId, withBackground = true }: WindowPropsType) {
+function Window ({ children, windowId, withBackground = true, onClickOutside = () => {} }: WindowPropsType) {
   const context = useContext(ModalContext)
   if (!context) throw new Error('ModalOpen used outside of ModalContext')
-  const { openWindow, close, windowContainerStyle } = context
+  const { openWindow, windowContainerStyle } = context
 
-  const windowElementRef = useClickOutside({ onClickOutside: () => close() })
+  const windowElementRef = useClickOutside({ onClickOutside })
 
   if (openWindow !== windowId) return null
 

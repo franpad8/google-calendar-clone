@@ -4,7 +4,7 @@ export interface ModalContextDataType {
   openWindow: string,
   windowContainerStyle?: CSSProperties
   close: () => void,
-  open: (windowId: string, windowContainerStyle?:CSSProperties) => void
+  open: (windowId: string, windowContainerStyle?:CSSProperties) => void,
 }
 
 export const ModalContext = createContext<ModalContextDataType | null>(null)

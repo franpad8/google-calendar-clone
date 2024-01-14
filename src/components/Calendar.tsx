@@ -1,5 +1,5 @@
 import { HiX } from 'react-icons/hi'
-import { format, isToday } from 'date-fns'
+import { format } from 'date-fns'
 
 import Square from './Square'
 import Modal from './Modal'
@@ -9,6 +9,8 @@ import useSelectedMonthStore from '../stores/selectedMonthStore'
 import { useShallow } from 'zustand/react/shallow'
 import useMouseWheel from '../hooks/useMouseWheel'
 import { getDaysInCalendar } from '../utils/helpers'
+import useModal from '../hooks/useModal'
+import useEventPreviewStore from '../stores/eventPreviewStore'
 
 function Calendar () {
   const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonthStore(
@@ -18,6 +20,9 @@ function Calendar () {
       incrementMonth: state.incrementMonth
     }))
   )
+
+  const { close: closeModal } = useModal()
+  const { reset } = useEventPreviewStore()
   const handleMouseWheel = useMouseWheel({
     onMouseWheelUp: incrementMonth,
     onMouseWheelDown: decrementMonth
@@ -28,6 +33,11 @@ function Calendar () {
     daysInMonth,
     daysAfterEndOfMonth
   ] = getDaysInCalendar(selectedMonth)
+
+  const handleCloseModal = () => {
+    reset()
+    closeModal()
+  }
 
   return (
     <>
@@ -41,58 +51,43 @@ function Calendar () {
                  bg-hairline'
         onWheel={handleMouseWheel}
       >
-        {daysBeforeStartOfMonth.map(day => {
-          const dayOfMonthNumber = format(day, 'd')
-
-          return (
-            <Square
-              key={day.getTime()}
-              dayName={format(day, 'eee')}
-              dayNumber={dayOfMonthNumber}
-              isToday={isToday(day)}
-            />
-          )
-        })}
+        {daysBeforeStartOfMonth.map(day => (
+          <Square
+            key={day.getTime()}
+            day={day}
+            showDayName
+          />
+        )
+        )}
         {daysInMonth.map(day => {
-          const dayOfMonthNumber = format(day, 'd')
-          const dayOfWeekNumber = format(day, 'i')
+          const dayOfMonthNumber = Number(format(day, 'd'))
+          const dayOfWeekNumber = Number(format(day, 'i'))
           return (
             <Square
               key={day.getTime()}
-              dayName={
-              Number(dayOfMonthNumber) <= Number(dayOfWeekNumber)
-                ? format(day, 'eee')
-                : undefined
-            }
-              dayNumber={
-              dayOfMonthNumber === '1' ? format(day, 'MMM d') : dayOfMonthNumber
-            }
-              isToday={isToday(day)}
+              day={day}
+              showDayName={dayOfMonthNumber <= dayOfWeekNumber}
             />
           )
         })}
-        {daysAfterEndOfMonth.map(day => {
-          const dayOfMonthNumber = format(day, 'd')
-          return (
-            <Square
-              key={day.getTime()}
-              dayNumber={
-              dayOfMonthNumber === '1' ? format(day, 'MMM d') : dayOfMonthNumber
-            }
-              isToday={isToday(day)}
-            />
-          )
-        })}
+        {daysAfterEndOfMonth.map(day => (
+          <Square
+            key={day.getTime()}
+            day={day}
+            showDayName={false}
+          />
+        )
+        )}
       </div>
 
-      <Modal.Window windowId='eventCreation'>
+      <Modal.Window windowId='eventCreation' onClickOutside={handleCloseModal}>
         <>
           <div className='flex items-center justify-end bg-slate-100 px-3'>
-            <Modal.Close><IconButton IconElement={HiX} /></Modal.Close>
+            <Modal.Close onClose={handleCloseModal}><IconButton IconElement={HiX} /></Modal.Close>
           </div>
 
           <div className='p-5'>
-            <CreateEventForm />
+            <CreateEventForm modalMode />
           </div>
         </>
       </Modal.Window>

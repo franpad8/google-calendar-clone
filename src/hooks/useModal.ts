@@ -5,5 +5,5 @@ export default function useModal () {
   const context = useContext(ModalContext)
   if (!context) throw new Error('useModal used outside of ModalContext')
 
-  return { open: context.open }
+  return { open: context.open, close: context.close }
 }

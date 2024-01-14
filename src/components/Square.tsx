@@ -1,27 +1,35 @@
 import React, { useRef } from 'react'
 import useModal from '../hooks/useModal'
+import { format, isSameDay, isToday as isTodayFns } from 'date-fns'
+import useEventPreviewStore from '../stores/eventPreviewStore'
+import EventItem from './EventItem'
+import { useShallow } from 'zustand/react/shallow'
 interface SquareProps {
-  dayName?: string
-  dayNumber: string
-  isToday?: boolean
+  day: Date,
+  showDayName: boolean,
 }
 
-interface EventType {
-  title: string
-}
+function Square ({ day, showDayName }: SquareProps) {
+  const {
+    setPreviewEventDay,
+    previewEventDay,
+    previewEventTitle
+  } = useEventPreviewStore(useShallow(state => ({
+    setPreviewEventDay: state.setDay,
+    previewEventDay: state.day,
+    previewEventTitle: state.title
+  })))
 
-function Square ({
-  dayName,
-  dayNumber,
-  isToday = false
-}: SquareProps): React.ReactElement {
   const { open: openModal } = useModal()
   const containerElementRef = useRef<HTMLDivElement>(null)
 
+  const isToday:boolean = isTodayFns(day)
+  const dayName = format(day, 'eee')
+  const dayNumber = day.getDate() === 1
+    ? format(day, 'MMM d')
+    : format(day, 'd')
+
   const style = isToday ? 'bg-blue-600 text-white' : ''
-  const events: [EventType] = [
-    { title: 'Go to gym' }
-  ]
 
   function handleClick () {
     const container = containerElementRef.current
@@ -39,6 +47,7 @@ function Square ({
       ? { bottom: `${viewportHeight - containerY}px` }
       : { top: `${containerY}px` }
 
+    setPreviewEventDay(day)
     openModal('eventCreation', { ...modalWidthStyle, ...modalHeightStyle })
   }
 
@@ -58,7 +67,7 @@ function Square ({
         onClick={handleClick}
         ref={containerElementRef}
       >
-        {dayName && (
+        {showDayName && (
           <span className='text-[11px] font-semibold uppercase text-slate-500'>
             {dayName}
           </span>
@@ -68,25 +77,10 @@ function Square ({
         </span>
         <ul className='flex w-full flex-col'>
           {
-              events.map(event => (
-                <li
-                  key={event.title}
-                  className='hover:
-                              w-[95%]
-                              cursor-pointer
-                              rounded-[4px]
-                              bg-sky-500
-                              px-2
-                              py-1
-                              text-xs
-                              leading-3
-                              text-white
-                              hover:bg-sky-600
-                              hover:text-slate-100'
-                >{event.title}
-                </li>
-              ))
-            }
+            previewEventDay && isSameDay(day, previewEventDay)
+              ? <EventItem event={{ title: previewEventTitle === '' ? '(Untitled)' : previewEventTitle }} />
+              : null
+          }
         </ul>
       </div>
     </>
