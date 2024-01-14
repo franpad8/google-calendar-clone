@@ -1,7 +1,7 @@
 import React from 'react'
 import MonthSelector from './MonthSelector'
 import CalendarLogo from '../assets/calendar_2x.png'
-import IconButton from './IconButton'
+import IconButton from '../ui/IconButton'
 import { HiOutlineMenu } from 'react-icons/hi'
 import useToggleSidebarStore from '../stores/toggleSidebarStore'
 

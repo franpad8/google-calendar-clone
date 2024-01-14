@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import Header from './components/Header'
-import Calendar from './components/Calendar'
-import Modal from './components/Modal'
+import Calendar from './components/calendar/Calendar'
+import Modal from './ui/Modal'
 import useToggleSidebarStore from './stores/toggleSidebarStore'
 import { twJoin } from 'tailwind-merge'
 

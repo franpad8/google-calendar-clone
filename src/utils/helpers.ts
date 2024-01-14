@@ -1,7 +1,7 @@
 import { addDays, eachDayOfInterval, endOfMonth, format, startOfMonth, subDays } from 'date-fns'
 import { type EventType } from '../types/event'
 
-export function getDaysInCalendar (month: Date) : [Date[], Date[], Date[]] {
+export function getDaysInCalendar (month: Date) : Date[] {
   const startMonth = startOfMonth(month)
   const endMonth = endOfMonth(month)
 
@@ -29,7 +29,7 @@ export function getDaysInCalendar (month: Date) : [Date[], Date[], Date[]] {
       })
       : []
 
-  return [daysBeforeStartOfMonth, daysInMonth, daysAfterEndOfMonth]
+  return daysBeforeStartOfMonth.concat(daysInMonth).concat(daysAfterEndOfMonth)
 }
 
 export function isMultiDayEvent (event: EventType) {

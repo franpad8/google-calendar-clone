@@ -1,6 +1,6 @@
 import { twJoin } from 'tailwind-merge'
-import { type EventType } from '../types/event'
-import { isMultiDayEvent } from '../utils/helpers'
+import { type EventType } from '../../types/event'
+import { isMultiDayEvent } from '../../utils/helpers'
 
 interface PropsType {
   event: EventType

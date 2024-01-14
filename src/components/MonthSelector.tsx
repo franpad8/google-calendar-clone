@@ -1,8 +1,8 @@
 import React, { MouseEvent } from 'react'
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi'
 import { format } from 'date-fns'
-import Button from './Button'
-import IconButton from './IconButton'
+import Button from '../ui/Button'
+import IconButton from '../ui/IconButton'
 import useSelectedMonthStore from '../stores/selectedMonthStore'
 
 function MonthSelector (): React.ReactElement {

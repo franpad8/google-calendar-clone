@@ -1,8 +1,8 @@
 import { useShallow } from 'zustand/react/shallow'
-import useEventPreviewStore from '../stores/eventPreviewStore'
-import Button from './Button'
+import useEventPreviewStore from '../../stores/eventPreviewStore'
+import Button from '../../ui/Button'
 import { ChangeEvent, FormEvent } from 'react'
-import useModal from '../hooks/useModal'
+import useModal from '../../hooks/useModal'
 
 interface Props {
   modalMode: boolean

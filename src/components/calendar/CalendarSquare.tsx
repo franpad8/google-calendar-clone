@@ -1,10 +1,10 @@
 import { useRef } from 'react'
-import useModal from '../hooks/useModal'
+import useModal from '../../hooks/useModal.ts'
 import { format, isSameDay, isToday as isTodayFns } from 'date-fns'
-import useEventPreviewStore from '../stores/eventPreviewStore'
-import EventItem from './EventItem'
+import useEventPreviewStore from '../../stores/eventPreviewStore.ts'
+import EventItem from '../events/EventItem.tsx'
 import { useShallow } from 'zustand/react/shallow'
-import { type EventType } from '../types/event.ts'
+import { type EventType } from '../../types/event.ts'
 interface SquareProps {
   day: Date,
   dayEvents: EventType[],
@@ -79,7 +79,7 @@ function Square ({ day, dayEvents, showDayName }: SquareProps) {
         </span>
         <ul className='flex w-full flex-col gap-1'>
           {
-            dayEvents && dayEvents.map(event => <EventItem key={day.toString + '_' + event.id} event={event} />)
+            dayEvents?.map(event => <EventItem key={day.toString + '_' + event.id} event={event} />)
           }
 
           {
