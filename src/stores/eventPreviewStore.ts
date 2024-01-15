@@ -1,21 +1,26 @@
 import { create } from 'zustand'
 
 interface StoreDataType {
-  title: string,
-  day: Date | null,
-  setTitle: (title: string) => void,
-  setDay: (date: Date) => void
+  title: string
+  startDay: Date | null
+  endDay: Date | null
+  setTitle: (title: string) => void
+  setStartDay: (date: Date) => void
+  setEndDay: (date: Date) => void
   reset: () => void
 }
 
 const useEventPreviewStore = create<StoreDataType>(set => ({
-  day: null,
+  startDay: null,
+  endDay: null,
   title: '',
-  setDay: (date: Date) => set(() => ({ day: date })),
+  setStartDay: (date: Date) => set(() => ({ startDay: date })),
+  setEndDay: (date: Date) => set(() => ({ endDay: date })),
   setTitle: (title: string) => set(() => ({ title })),
   reset: () => set(() => ({
     title: '',
-    day: null
+    startDay: null,
+    endDay: null
   }))
 }))
 

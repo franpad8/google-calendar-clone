@@ -1,5 +1,6 @@
 import React, {
   CSSProperties,
+  Fragment,
   ReactElement,
   RefObject,
   cloneElement,
@@ -9,6 +10,7 @@ import React, {
 import { createPortal } from 'react-dom'
 import useClickOutside from '../hooks/useClickOutside'
 import { ModalContext, ModalContextDataType } from '../contexts/modalContext'
+import Draggable from 'react-draggable'
 
 function Modal ({ children }: { children: React.ReactElement }) {
   const [openWindow, setOpenWindow] = useState<string>('')
@@ -75,9 +77,16 @@ interface WindowPropsType {
   children: ReactElement
   windowId: string
   withBackground?: boolean
-  onClickOutside?: () => void
+  onClickOutside?: () => void,
+  draggable?: boolean
 }
-function Window ({ children, windowId, withBackground = true, onClickOutside = () => {} }: WindowPropsType) {
+function Window ({
+  children,
+  windowId,
+  withBackground = true,
+  onClickOutside = () => {},
+  draggable = false
+}: WindowPropsType) {
   const context = useContext(ModalContext)
   if (!context) throw new Error('ModalOpen used outside of ModalContext')
   const { openWindow, windowContainerStyle } = context
@@ -90,16 +99,20 @@ function Window ({ children, windowId, withBackground = true, onClickOutside = (
   const containerStyles = windowContainerStyle ||
     { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }
 
+  const WrapperElement = draggable ? Draggable : Fragment
+
   return createPortal(
     <>
       {withBackground && <div className='absolute left-0 top-0 h-full w-full bg-transparent' />}
-      <div
-        className='absolute z-50 rounded-md border bg-white shadow-lg transition-all'
-        ref={windowElementRef as RefObject<HTMLDivElement>}
-        style={containerStyles}
-      >
-        {children}
-      </div>
+      <WrapperElement handle='.handle'>
+        <div
+          className='absolute z-50 rounded-md border bg-white shadow-lg'
+          ref={windowElementRef as RefObject<HTMLDivElement>}
+          style={containerStyles}
+        >
+          {children}
+        </div>
+      </WrapperElement>
     </>,
     document.body
   )

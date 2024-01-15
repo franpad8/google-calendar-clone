@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import useModal from '../../hooks/useModal.ts'
-import { format, isSameDay, isToday as isTodayFns } from 'date-fns'
+import { format, isToday as isTodayFns, isWithinInterval } from 'date-fns'
 import useEventPreviewStore from '../../stores/eventPreviewStore.ts'
 import EventItem from '../events/EventItem.tsx'
 import { useShallow } from 'zustand/react/shallow'
@@ -13,12 +13,16 @@ interface SquareProps {
 
 function Square ({ day, dayEvents, showDayName }: SquareProps) {
   const {
-    setPreviewEventDay,
-    previewEventDay,
+    previewEventStartDay,
+    previewEventEndDay,
+    setPreviewEventStartDay,
+    setPreviewEventEndDay,
     previewEventTitle
   } = useEventPreviewStore(useShallow(state => ({
-    setPreviewEventDay: state.setDay,
-    previewEventDay: state.day,
+    previewEventStartDay: state.startDay,
+    previewEventEndDay: state.endDay,
+    setPreviewEventStartDay: state.setStartDay,
+    setPreviewEventEndDay: state.setEndDay,
     previewEventTitle: state.title
   })))
 
@@ -49,7 +53,8 @@ function Square ({ day, dayEvents, showDayName }: SquareProps) {
       ? { bottom: `${viewportHeight - containerY}px` }
       : { top: `${containerY}px` }
 
-    setPreviewEventDay(day)
+    setPreviewEventStartDay(day)
+    setPreviewEventEndDay(day)
     openModal('eventCreation', { ...modalWidthStyle, ...modalHeightStyle })
   }
 
@@ -83,8 +88,17 @@ function Square ({ day, dayEvents, showDayName }: SquareProps) {
           }
 
           {
-            previewEventDay && isSameDay(day, previewEventDay)
-              ? <EventItem event={{ title: previewEventTitle === '' ? '(Untitled)' : previewEventTitle }} />
+            previewEventStartDay &&
+            previewEventEndDay &&
+            isWithinInterval(day, { start: previewEventStartDay, end: previewEventEndDay })
+              ? <EventItem
+                  event={{
+                    id: 99999999,
+                    title: previewEventTitle === '' ? '(Untitled)' : previewEventTitle,
+                    startDate: format(previewEventStartDay, 'yy-MM-dd'),
+                    endDate: format(previewEventEndDay, 'yy-MM-dd')
+                  }}
+                />
               : null
           }
         </ul>

@@ -16,6 +16,13 @@ module.exports = {
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true }
+    ],
+    'tailwindcss/no-custom-classname': [
+      'warn',
+      {
+        whitelist: ['handle']
+      }
     ]
+
   }
 }
