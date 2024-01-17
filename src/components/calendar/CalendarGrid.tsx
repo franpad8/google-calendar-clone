@@ -32,7 +32,9 @@ function CalendarGrid () {
     <div
       className='grid
                  h-full
-                 w-full grid-cols-[repeat(7,1fr)]
+                 w-full
+                 grid-cols-[repeat(7,1fr)]
+                 grid-rows-[repeat(5,1fr)]
                  border
                  border-t-0
                  border-hairline

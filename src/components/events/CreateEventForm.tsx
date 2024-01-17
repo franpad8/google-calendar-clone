@@ -1,15 +1,22 @@
 import { useShallow } from 'zustand/react/shallow'
 import useEventPreviewStore from '../../stores/eventPreviewStore'
 import Button from '../../ui/Button'
-import { ChangeEvent, FormEvent } from 'react'
 import useModal from '../../hooks/useModal'
 import { format } from 'date-fns'
 import DateInput from '../../ui/DateInput'
 import { HiOutlineClock, HiOutlineLocationMarker, HiOutlineMenuAlt2 } from 'react-icons/hi'
 import ToggleShowButton from '../../ui/ToggleShowButton'
-
+import { SubmitHandler, useForm } from 'react-hook-form'
 interface Props {
   modalMode: boolean
+}
+
+type FormFields = {
+  title: string,
+  startDay: Date,
+  endDay: Date,
+  description: string,
+  location: string
 }
 
 function CreateEventForm ({ modalMode }: Props) {
@@ -33,18 +40,27 @@ function CreateEventForm ({ modalMode }: Props) {
 
   const { close: closeModal } = useModal()
 
-  function handleTitleChange (e: ChangeEvent<HTMLInputElement>) {
-    setEventPreviewTitle(e.target.value)
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm<FormFields>({
+    defaultValues: {
+      title: eventPreviewTitle
+    }
+  })
 
-  function handleSubmit (e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    resetEventPreview()
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    await new Promise((resolve) => { setTimeout(() => resolve(true), 3000) })
+
+    console.log(data)
+
     if (modalMode) { closeModal() }
+    resetEventPreview()
   }
 
   return (
-    <form className='overflow-auto' onSubmit={handleSubmit}>
+    <form className='overflow-auto' onSubmit={handleSubmit(onSubmit)}>
       <div className='grid grid-cols-[60px_1fr] items-center gap-y-3 pr-4'>
         <input
           className='col-start-2
@@ -59,24 +75,39 @@ function CreateEventForm ({ modalMode }: Props) {
                      placeholder:text-surface/85
                      focus:border-b-blue-600'
           type='text'
-          name='title'
-          placeholder='Add a title'
-          value={eventPreviewTitle}
-          onChange={handleTitleChange}
+          placeholder='Add a title and a time'
+          {...register('title', {
+            onChange: (e) => setEventPreviewTitle(e.target.value)
+          })}
         />
 
         <HiOutlineClock className='h-[1.3rem] w-[1.3rem] justify-self-center' />
 
         <div className='col-start-2 col-end-2 flex gap-8'>
-          <DateInput
-            value={format(eventPreviewStartDay as Date, 'yyyy-MM-dd')}
-            onChange={e => { setEventPreviewStartDay(new Date(e.target.value + 'T00:00:00')) }}
-            name='startDate'
+          <DateInput<FormFields>
+            defaultValue={format(eventPreviewStartDay as Date || new Date(), 'yyyy-MM-dd')}
+            errors={errors.startDay}
+            name='startDay'
+            register={register}
+            options={{
+              onChange: (event) => setEventPreviewStartDay(new Date(event.target.value + 'T00:00:00')),
+              required: true,
+              validate: (startDay, formValues) => startDay <= formValues.endDay ||
+                'Event cannot finish without having started'
+            }}
           />
-          <DateInput
-            value={format(eventPreviewEndDay as Date, 'yyyy-MM-dd')}
-            onChange={e => { setEventPreviewEndDay(new Date(e.target.value + 'T00:00:00')) }}
-            name='endDate'
+          <DateInput<FormFields>
+            defaultValue={format(eventPreviewEndDay as Date || new Date(), 'yyyy-MM-dd')}
+            {...(errors.endDay ? { title: errors.endDay.message } : {})}
+            errors={errors.endDay}
+            name='endDay'
+            register={register}
+            options={{
+              onChange: (event) => setEventPreviewEndDay(new Date(event.target.value + 'T00:00:00')),
+              required: true,
+              validate: (endDay, formValues) => endDay >= formValues.startDay ||
+                'Event cannot finish without having started'
+            }}
           />
         </div>
 
@@ -92,9 +123,9 @@ function CreateEventForm ({ modalMode }: Props) {
                        outline-none
                        transition
                        focus:border-b-blue-500'
-            name='description'
             placeholder='Add a description'
             rows={2}
+            {...register('description')}
           />
         </ToggleShowButton>
 
@@ -112,15 +143,16 @@ function CreateEventForm ({ modalMode }: Props) {
                        outline-none
                        transition
                        focus:border-b-blue-500'
-            name='location'
             placeholder='Add a location'
+            {...register('location')}
+
           />
         </ToggleShowButton>
 
       </div>
 
       <div className='mb-2 mr-4 mt-4 flex justify-end'>
-        <Button>Save</Button>
+        <Button disabled={isSubmitting}>{isSubmitting ? 'Loading...' : 'Save'}</Button>
       </div>
     </form>
   )

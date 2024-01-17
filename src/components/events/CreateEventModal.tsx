@@ -18,7 +18,7 @@ function CreateEventModal () {
 
     <Modal.Window windowId='eventCreation' onClickOutside={handleCloseModal} draggable>
       <>
-        <div className='handle flex cursor-move items-center justify-end bg-slate-100 px-3'>
+        <div className='handle flex w-[32rem] cursor-move items-center justify-end bg-slate-100 px-3'>
           <Modal.Close onClose={handleCloseModal}><IconButton IconElement={HiX} /></Modal.Close>
         </div>
 
