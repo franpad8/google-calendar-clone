@@ -1,20 +1,23 @@
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { useShallow } from 'zustand/react/shallow'
+import { format } from 'date-fns'
+import { HiOutlineClock, HiOutlineLocationMarker, HiOutlineMenuAlt2 } from 'react-icons/hi'
+
 import useEventPreviewStore from '../../stores/eventPreviewStore'
 import Button from '../../ui/Button'
 import useModal from '../../hooks/useModal'
-import { format } from 'date-fns'
 import DateInput from '../../ui/DateInput'
-import { HiOutlineClock, HiOutlineLocationMarker, HiOutlineMenuAlt2 } from 'react-icons/hi'
 import ToggleShowButton from '../../ui/ToggleShowButton'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { EventType } from '../../types/event'
+import useEventStore from '../../stores/eventStore'
 interface Props {
   modalMode: boolean
 }
 
 type FormFields = {
   title: string,
-  startDay: Date,
-  endDay: Date,
+  startDay: string,
+  endDay: string,
   description: string,
   location: string
 }
@@ -38,6 +41,8 @@ function CreateEventForm ({ modalMode }: Props) {
     resetEventPreview: state.reset
   })))
 
+  const addEvent = useEventStore(state => state.addEvent)
+
   const { close: closeModal } = useModal()
 
   const {
@@ -51,9 +56,16 @@ function CreateEventForm ({ modalMode }: Props) {
   })
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    await new Promise((resolve) => { setTimeout(() => resolve(true), 3000) })
+    const newEvent: EventType = {
+      id: crypto.randomUUID(),
+      title: data.title || '(Untitled)',
+      startDate: data.startDay,
+      endDate: data.endDay
+    }
 
-    console.log(data)
+    console.log(newEvent)
+
+    addEvent(newEvent)
 
     if (modalMode) { closeModal() }
     resetEventPreview()

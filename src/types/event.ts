@@ -1,5 +1,5 @@
 export interface EventType {
-  id: number
+  id: string
   title: string
   startDate: string
   endDate: string

@@ -1,14 +1,12 @@
-import { useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { format } from 'date-fns'
 
 import useSelectedMonthStore from '../../stores/selectedMonthStore'
-import { getDaysInCalendar } from '../../utils/helpers'
+import { getDaysInCalendar, groupEventsByDate } from '../../utils/helpers'
 import useMouseWheel from '../../hooks/useMouseWheel'
-import { EventDataType } from '../../types/event'
 
-import eventsData from '../../mocks/events.json'
 import Square from './CalendarSquare'
+import useEventStore from '../../stores/eventStore'
 
 function CalendarGrid () {
   const { selectedMonth, decrementMonth, incrementMonth } = useSelectedMonthStore(
@@ -21,7 +19,11 @@ function CalendarGrid () {
 
   const daysInMonth = getDaysInCalendar(selectedMonth)
 
-  const [events] = useState<EventDataType>(() => eventsData)
+  const events = useEventStore(state => state.events)
+
+  const eventsByDate = groupEventsByDate(events)
+
+  console.log(eventsByDate)
 
   const handleMouseWheel = useMouseWheel({
     onMouseWheelUp: incrementMonth,
@@ -45,7 +47,7 @@ function CalendarGrid () {
         <Square
           key={day.getTime()}
           day={day}
-          dayEvents={events[format(day, 'y-MM-dd')]}
+          dayEvents={eventsByDate[format(day, 'y-MM-dd')]}
           showDayName={index < 7}
         />
       ))}

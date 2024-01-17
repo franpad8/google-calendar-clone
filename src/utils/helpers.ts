@@ -35,3 +35,24 @@ export function getDaysInCalendar (month: Date) : Date[] {
 export function isMultiDayEvent (event: EventType) {
   return event.startDate !== event.endDate
 }
+
+export function groupEventsByDate (events: EventType[]): {[key: string]: EventType[]} {
+  const groupedBy = {} as {[key: string]: EventType[]}
+  events.forEach(event => {
+    const eventDays = eachDayOfInterval({
+      start: new Date(event.startDate + 'T00:00:00'),
+      end: new Date(event.endDate + 'T00:00:00')
+    })
+
+    eventDays.forEach(day => {
+      const date: string = format(day, 'yyyy-MM-dd')
+      if (!groupedBy[date]) {
+        groupedBy[date] = [event]
+      } else {
+        groupedBy[date] = [...groupedBy[date], event]
+      }
+    })
+  })
+
+  return groupedBy
+}
