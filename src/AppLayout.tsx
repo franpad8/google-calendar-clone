@@ -1,9 +1,9 @@
 import { ReactElement } from 'react'
 import Header from './components/Header'
-import Calendar from './components/calendar/Calendar'
 import Modal from './ui/Modal'
 import useToggleSidebarStore from './stores/toggleSidebarStore'
 import { twJoin } from 'tailwind-merge'
+import { Outlet } from 'react-router-dom'
 
 function AppLayout (): ReactElement {
   const showSidebar = useToggleSidebarStore(state => state.showSidebar)
@@ -19,7 +19,7 @@ function AppLayout (): ReactElement {
       <div className='h-full'>SIDEBAR</div>
       <main>
         <Modal>
-          <Calendar />
+          <Outlet />
         </Modal>
       </main>
     </div>
