@@ -23,8 +23,6 @@ function CalendarGrid () {
 
   const eventsByDate = groupEventsByDate(events)
 
-  console.log(eventsByDate)
-
   const handleMouseWheel = useMouseWheel({
     onMouseWheelUp: incrementMonth,
     onMouseWheelDown: decrementMonth

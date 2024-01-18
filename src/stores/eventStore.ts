@@ -7,6 +7,7 @@ interface DataType {
   events: EventType[],
   setEvents: (events: EventType[]) => void,
   addEvent: (event: EventType) => void
+  deleteEvent: (eventId: string) => void
 }
 
 const useEventStore = create<DataType>()(
@@ -14,7 +15,10 @@ const useEventStore = create<DataType>()(
     (set, get) => ({
       events: [],
       setEvents: (events:EventType[]) => set({ events }),
-      addEvent: (event: EventType) => set({ events: [...get().events, event] })
+      addEvent: (event: EventType) => set({ events: [...get().events, event] }),
+      deleteEvent: (eventId: string) => set({
+        events: get().events.filter(event => event.id !== eventId)
+      })
     }),
     {
       name: 'events-storage'

@@ -3,8 +3,6 @@ export interface EventType {
   title: string
   startDate: string
   endDate: string
-}
-
-export interface EventDataType {
-  [startDate: string]: EventType[]
+  location?: string
+  description?: string
 }

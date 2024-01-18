@@ -84,7 +84,7 @@ function Square ({ day, dayEvents, showDayName }: SquareProps) {
         </span>
         <ul className='flex w-full flex-col gap-1'>
           {
-            dayEvents?.map(event => <EventItem key={day.toString + '_' + event.id} event={event} />)
+            dayEvents?.map(event => <EventItem key={day.toString() + '_' + event.id} event={event} day={day} />)
           }
 
           {
@@ -93,11 +93,12 @@ function Square ({ day, dayEvents, showDayName }: SquareProps) {
             isWithinInterval(day, { start: previewEventStartDay, end: previewEventEndDay })
               ? <EventItem
                   event={{
-                    id: 99999999,
+                    id: '99999999',
                     title: previewEventTitle === '' ? '(Untitled)' : previewEventTitle,
-                    startDate: format(previewEventStartDay, 'yy-MM-dd'),
-                    endDate: format(previewEventEndDay, 'yy-MM-dd')
+                    startDate: format(previewEventStartDay, 'yyyy-MM-dd'),
+                    endDate: format(previewEventEndDay, 'yyyy-MM-dd')
                   }}
+                  day={day}
                 />
               : null
           }

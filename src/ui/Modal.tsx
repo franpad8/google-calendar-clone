@@ -47,7 +47,8 @@ function Open ({ children, opens: windowId, windowContainerStyle }: OpenPropsTyp
 
   const { open } = context
 
-  function handleClick () {
+  function handleClick (e: Event) {
+    e.stopPropagation()
     open(windowId, windowContainerStyle)
   }
 
@@ -70,7 +71,7 @@ function Close ({ children, onClose = () => {} }: ClosePropsType) {
     closeModal()
   }
 
-  return cloneElement(children, { onClick })
+  return cloneElement(children, { onClick, title: 'Close' })
 }
 
 interface WindowPropsType {
@@ -84,14 +85,14 @@ function Window ({
   children,
   windowId,
   withBackground = true,
-  onClickOutside = () => {},
+  onClickOutside,
   draggable = false
 }: WindowPropsType) {
   const context = useContext(ModalContext)
   if (!context) throw new Error('ModalOpen used outside of ModalContext')
-  const { openWindow, windowContainerStyle } = context
+  const { openWindow, windowContainerStyle, close } = context
 
-  const windowElementRef = useClickOutside({ onClickOutside })
+  const windowElementRef = useClickOutside({ onClickOutside: onClickOutside || close })
 
   if (openWindow !== windowId) return null
 
@@ -104,7 +105,7 @@ function Window ({
   return createPortal(
     <>
       {withBackground && <div className='absolute left-0 top-0 h-full w-full bg-transparent' />}
-      <WrapperElement handle='.handle'>
+      <WrapperElement {... draggable ? { handle: '.handle' } : {}}>
         <div
           className='absolute z-50 rounded-md border bg-white shadow-lg'
           ref={windowElementRef as RefObject<HTMLDivElement>}

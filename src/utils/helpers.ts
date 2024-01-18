@@ -56,3 +56,7 @@ export function groupEventsByDate (events: EventType[]): {[key: string]: EventTy
 
   return groupedBy
 }
+
+export function toDate (dateString: string) {
+  return new Date(dateString + 'T00:00:00')
+}

@@ -60,13 +60,11 @@ function CreateEventForm ({ modalMode }: Props) {
       id: crypto.randomUUID(),
       title: data.title || '(Untitled)',
       startDate: data.startDay,
-      endDate: data.endDay
+      endDate: data.endDay,
+      location: data.location,
+      description: data.description
     }
-
-    console.log(newEvent)
-
     addEvent(newEvent)
-
     if (modalMode) { closeModal() }
     resetEventPreview()
   }
