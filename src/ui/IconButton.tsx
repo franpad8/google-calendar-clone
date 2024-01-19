@@ -10,7 +10,8 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 function IconButton ({ IconElement, size = 'sm', ...props }: Props) {
   const iconClasses = twMerge(
     'h-[1.2rem] w-[1.2rem]',
-    size === 'md' ? 'h-[1.4rem] w-[1.4rem]' : ''
+    size === 'md' ? 'h-[1.4rem] w-[1.4rem]' : '',
+    size === 'xs' ? 'h-[1rem] w-[1rem]' : ''
   )
   const buttonClasses = twMerge(
     'cursor-pointer rounded-full hover:bg-slate-50 p-[.4rem] ' +

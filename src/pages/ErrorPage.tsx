@@ -10,8 +10,8 @@ const ErrorPage: FC = () => {
 
   return (
     <div className='flex h-[100dvh] flex-col items-center justify-center'>
-      <img src={GoogleLogo} alt='Google logo' />
-      <h1 className='mb-3'>Something went wrong...</h1>
+      <img className='mb-5' src={GoogleLogo} alt='Google logo' />
+      <h1 className='mb-3 font-display text-2xl'>Something went wrong...</h1>
       <Link to='/calendar' replace><Button>Back to Calendar</Button></Link>
     </div>
   )

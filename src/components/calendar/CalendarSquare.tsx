@@ -61,6 +61,7 @@ function Square ({ day, dayEvents, showDayName }: SquareProps) {
   return (
     <>
       <div
+        id={`square-${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`}
         className='flex flex-col
                   items-center
                   gap-1

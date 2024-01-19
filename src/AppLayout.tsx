@@ -4,6 +4,7 @@ import Modal from './ui/Modal'
 import useToggleSidebarStore from './stores/toggleSidebarStore'
 import { twJoin } from 'tailwind-merge'
 import { Outlet } from 'react-router-dom'
+import Sidebar from './components/Sidebar'
 
 function AppLayout (): ReactElement {
   const showSidebar = useToggleSidebarStore(state => state.showSidebar)
@@ -16,7 +17,9 @@ function AppLayout (): ReactElement {
   return (
     <div className={containerClasses}>
       <Header />
-      <div className='h-full'>SIDEBAR</div>
+      <div className='h-full'>
+        <Sidebar />
+      </div>
       <main>
         <Modal>
           <Outlet />
