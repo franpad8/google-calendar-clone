@@ -38,7 +38,7 @@ function EventItem ({ event, day }: PropsType) {
       <button
         className={
           twJoin('cursor-pointer truncate text-wrap leading-3 ' +
-                  'rounded-[4px] bg-sky-500 px-2 py-1 text-xs ' +
+                  'rounded-[4px] bg-sky-500 px-2 py-1 text-xs text-left ' +
                   'text-white transition hover:bg-sky-600 hover:text-slate-100 ',
           classes)
 }
