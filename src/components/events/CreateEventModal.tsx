@@ -22,7 +22,7 @@ function CreateEventModal () {
           <Modal.Close onClose={handleCloseModal}><IconButton IconElement={HiX} /></Modal.Close>
         </div>
 
-        <CreateEventForm modalMode />
+        <CreateEventForm modalMode afterCreate={handleCloseModal} />
       </>
     </Modal.Window>
   )

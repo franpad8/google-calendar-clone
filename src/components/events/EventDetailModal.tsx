@@ -1,4 +1,4 @@
-import { HiOutlineLocationMarker, HiOutlineMenuAlt2, HiOutlineTrash, HiX } from 'react-icons/hi'
+import { HiOutlineLocationMarker, HiOutlineMenuAlt2, HiOutlinePencil, HiOutlineTrash, HiX } from 'react-icons/hi'
 import IconButton from '../../ui/IconButton'
 import Modal from '../../ui/Modal'
 import useSelectedEventStore from '../../stores/selectedEventStore'
@@ -7,6 +7,7 @@ import { MouseEventHandler } from 'react'
 import { EventType } from '../../types/event'
 import { isMultiDayEvent, toDate } from '../../utils/helpers'
 import { format } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 
 function formatEventDate (event: EventType) {
   const startDate = toDate(event.startDate)
@@ -22,12 +23,17 @@ function formatEventDate (event: EventType) {
 function EventDetailModal () {
   const selectedEvent = useSelectedEventStore(state => state.selectedEvent)
   const deleteEvent = useEventStore(state => state.deleteEvent)
+  const navigate = useNavigate()
+
+  if (!selectedEvent) return null
 
   const handleDeletion: MouseEventHandler = () => {
     if (selectedEvent) deleteEvent(selectedEvent.id)
   }
 
-  if (!selectedEvent) return null
+  const handleEdition: MouseEventHandler = () => {
+    if (selectedEvent) navigate(`/calendar/eventedit/${selectedEvent.id}`)
+  }
 
   return (
     <Modal.Window windowId='eventDetail' withBackground draggable>
@@ -43,7 +49,10 @@ function EventDetailModal () {
         >
           <Modal.Close>
             <div className='flex gap-3'>
-              <IconButton IconElement={HiOutlineTrash} title='Delete this event' onClick={handleDeletion} />
+              <div>
+                <IconButton IconElement={HiOutlinePencil} title='Edit this event' onClick={handleEdition} />
+                <IconButton IconElement={HiOutlineTrash} title='Delete this event' onClick={handleDeletion} />
+              </div>
               <IconButton IconElement={HiX} />
             </div>
           </Modal.Close>

@@ -1,17 +1,19 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useShallow } from 'zustand/react/shallow'
 import { format } from 'date-fns'
-import { HiOutlineClock, HiOutlineLocationMarker, HiOutlineMenuAlt2 } from 'react-icons/hi'
+import { HiOutlineClock, HiOutlineLocationMarker, HiOutlineMenuAlt2, HiX } from 'react-icons/hi'
 
 import useEventPreviewStore from '../../stores/eventPreviewStore'
 import Button from '../../ui/Button'
-import useModal from '../../hooks/useModal'
 import DateInput from '../../ui/DateInput'
 import ToggleShowButton from '../../ui/ToggleShowButton'
 import { EventType } from '../../types/event'
 import useEventStore from '../../stores/eventStore'
+import IconButton from '../../ui/IconButton'
 interface Props {
-  modalMode: boolean
+  modalMode: boolean,
+  afterCreate?: () => void
+  event?: EventType
 }
 
 type FormFields = {
@@ -22,15 +24,14 @@ type FormFields = {
   location: string
 }
 
-function CreateEventForm ({ modalMode }: Props) {
+function CreateEventForm ({ modalMode, afterCreate, event }: Props) {
   const {
     eventPreviewStartDay,
     eventPreviewEndDay,
     eventPreviewTitle,
     setEventPreviewTitle,
     setEventPreviewStartDay,
-    setEventPreviewEndDay,
-    resetEventPreview
+    setEventPreviewEndDay
   } = useEventPreviewStore(useShallow(state => ({
     eventPreviewStartDay: state.startDay,
     setEventPreviewStartDay: state.setStartDay,
@@ -41,9 +42,10 @@ function CreateEventForm ({ modalMode }: Props) {
     resetEventPreview: state.reset
   })))
 
-  const addEvent = useEventStore(state => state.addEvent)
-
-  const { close: closeModal } = useModal()
+  const { addEvent, editEvent } = useEventStore(useShallow(state => ({
+    addEvent: state.addEvent,
+    editEvent: state.editEvent
+  })))
 
   const {
     register,
@@ -51,27 +53,39 @@ function CreateEventForm ({ modalMode }: Props) {
     formState: { errors, isSubmitting }
   } = useForm<FormFields>({
     defaultValues: {
-      title: eventPreviewTitle
+      title: event?.title || eventPreviewTitle,
+      startDay: event?.startDate,
+      endDay: event?.endDate,
+      description: event?.description,
+      location: event?.location
     }
   })
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const newEvent: EventType = {
-      id: crypto.randomUUID(),
+      id: event?.id || crypto.randomUUID(),
       title: data.title || '(Untitled)',
       startDate: data.startDay,
       endDate: data.endDay,
       location: data.location,
       description: data.description
     }
-    addEvent(newEvent)
-    if (modalMode) { closeModal() }
-    resetEventPreview()
+    event?.id ? editEvent(newEvent) : addEvent(newEvent)
+    afterCreate?.()
   }
+
+  const actionName = modalMode ? 'Save' : 'Update'
 
   return (
     <form className='overflow-auto' onSubmit={handleSubmit(onSubmit)}>
       <div className='grid grid-cols-[60px_1fr] items-center gap-y-3 pr-4'>
+
+        {
+          !modalMode &&
+            <div className='relative top-[0.7rem] text-center'>
+              <IconButton size='md' IconElement={HiX} />
+            </div>
+        }
         <input
           className='col-start-2
                      col-end-2
@@ -162,7 +176,7 @@ function CreateEventForm ({ modalMode }: Props) {
       </div>
 
       <div className='mb-2 mr-4 mt-4 flex justify-end'>
-        <Button disabled={isSubmitting}>{isSubmitting ? 'Loading...' : 'Save'}</Button>
+        <Button disabled={isSubmitting}>{isSubmitting ? 'Loading...' : actionName}</Button>
       </div>
     </form>
   )

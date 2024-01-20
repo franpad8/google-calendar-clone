@@ -1,12 +1,15 @@
 import React, { FC, useEffect } from 'react'
-import AppLayout from './AppLayout'
-import useSelectedMonthStore from './stores/selectedMonthStore'
-import { format } from 'date-fns'
 import { Navigate, createBrowserRouter, RouterProvider, useParams, Outlet } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
+import { format } from 'date-fns'
+
+import AppLayout from './AppLayout'
 import NotFoundPage from './pages/NotFound'
 import ErrorPage from './pages/ErrorPage'
 import CalendarPage from './pages/CalendarPage'
+import EditEventPage from './pages/EditEventPage'
+
+import useSelectedMonthStore from './stores/selectedMonthStore'
 
 const ErrorBoundaryLayout: FC = () => {
   return (
@@ -36,6 +39,10 @@ const router = createBrowserRouter([
             element: <PathValidation />
           }
         ]
+      },
+      {
+        path: '/calendar/eventedit/:eventId',
+        element: <EditEventPage />
       }
     ]
   },
